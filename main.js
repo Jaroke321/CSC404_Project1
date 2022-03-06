@@ -30,7 +30,7 @@ function averageTest(test1, test2) {
     if ((test1 >= 0) && (test1 <= 100) && (test2 >= 0) && (test2 <= 100)) {
         var total = test1 + test2;
         var average = (1/2) * total;
-        return average
+        return average;
     }
 
     return -1;
@@ -79,6 +79,9 @@ function getFinalGrade(hw1, hw2, hw3, test1, test2) {
     var testPercent = getTestWeight(test1, test2);
     var assignmentPercent = getAssignmentWeight(hw1, hw2, hw3);
 
+    console.log("\n[INFO] Test Percent:       " + testPercent + " %");
+    console.log("[INFO] Assignment Percent: " + assignmentPercent + " %");
+
     // If the values are less than 0 that means that they were out of range
     if((testPercent >= 0) && (assignmentPercent >= 0)) {
         return Math.round(testPercent + assignmentPercent);
@@ -95,32 +98,32 @@ function getFinalGrade(hw1, hw2, hw3, test1, test2) {
  */
 function printFinalGrade(grade) {
 
-    console.log('FINAL PERCENTAGE: ' + grade)
+    console.log('\n[+] FINAL PERCENTAGE:      ' + grade + " %")
 
     if(grade >= 93) {
-        console.log(' Grade: A');
+        console.log('[+] Grade:                 A');
     } else if (grade >= 90) {
-        console.log(' Grade: A-');
+        console.log('[+] Grade:                 A-');
     } else if (grade >= 87) {
-        console.log(' Grade: B+');
+        console.log('[+] Grade:                 B+');
     } else if (grade >= 83) {
-        console.log(' Grade: B');
+        console.log('[+] Grade:                 B');
     } else if (grade >= 80) {
-        console.log(' Grade: B-');
+        console.log('[+] Grade:                 B-');
     } else if (grade >= 77) {
-        console.log(' Grade: C+');
+        console.log('[+] Grade:                 C+');
     } else if (grade >= 73) {
-        console.log(' Grade: C');
+        console.log('[+] Grade:                 C');
     } else if (grade >= 70) {
-        console.log(' Grade: C-');
+        console.log('[+] Grade:                 C-');
     } else if (grade >= 67) {
-        console.log(' Grade: D+');
+        console.log('[+] Grade:                 D+');
     } else if (grade >= 63) {
-        console.log(' Grade: D');
+        console.log('[+] Grade:                 D');
     } else if (grade >= 60) {
-        console.log(' Grade: D-');
+        console.log('[+] Grade:                 D-');
     } else {
-        console.log(' Grade: F');
+        console.log('[+] Grade:                 F');
     }
 
 }
@@ -570,50 +573,56 @@ var schema = {
      hw1: { 
        pattern: /^[0-9]\d*(\.\d+)?$/,
        message: 'Grade must be postive number',
-       required: true},
+       required: true,
+       type: 'number'
+     },
      hw2: { 
-      pattern: /^[0-9]\d*(\.\d+)?$/,
+       pattern: /^[0-9]\d*(\.\d+)?$/,
        message: 'Grade must be postive number',
-       required: true
+       required: true,
+       type: 'number'
      },
      hw3: { 
-      pattern: /^[0-9]\d*(\.\d+)?$/,
+       pattern: /^[0-9]\d*(\.\d+)?$/,
        message: 'Grade must be postive number',
-       required: true
+       required: true,
+       type: 'number'
      },
      exam1: { 
-      pattern: /^[0-9]\d*(\.\d+)?$/,
+       pattern: /^[0-9]\d*(\.\d+)?$/,
        message: 'Grade must be postive number',
-       required: true
+       required: true,
+       type: 'number'
      },
      exam2: { 
-      pattern: /^[0-9]\d*(\.\d+)?$/,
+       pattern: /^[0-9]\d*(\.\d+)?$/,
        message: 'Grade must be postive number',
-       required: true
+       required: true,
+       type: 'number'
      }
      
    }
  };
 
-//prompt.get(schema, function (err, result) {
+prompt.get(schema, function (err, result) {
 
-//    console.log(' Assignment1: ' + result.assignment1);
-//    console.log(' Assignment2: ' + result.assignment2);
-//    console.log(' Assignment3: ' + result.assignment3)
-//    console.log(' exam1: ' + result.test1);
-//    console.log(' exam2: ' + result.test2);
+    //console.log(' HW1: ' + result.hw1);
+    //console.log(' HW2: ' + result.hw2);
+    //console.log(' HW3: ' + result.hw3);
+    //console.log(' exam1: ' + result.exam1);
+    //console.log(' exam2: ' + result.exam2);
 
- //   var finalGrade = getFinalGrade(result.hw1, result.hw2, result.hw3, result.test1, result.test2);
- //   printFinalGrade(finalGrade);
+    var finalGrade = getFinalGrade(result.hw1, result.hw2, result.hw3, result.exam1, result.exam2);
+    printFinalGrade(finalGrade);
 
-//});
+});
 
-//prompt.start();
+prompt.start();
 
 
 
-testAverageHomework();
-testAverageTest();
-testGetAssignmentWeight();
-testGetTestWeight();
+//testAverageHomework();
+//testAverageTest();
+//testGetAssignmentWeight();
+//testGetTestWeight();
 //testGetFinalGrade();
