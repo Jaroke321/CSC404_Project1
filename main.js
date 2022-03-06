@@ -32,6 +32,8 @@ function averageTest(test1, test2) {
         var average = (1/2) * total;
         return average
     }
+
+    return -1;
 }
 
 /**
@@ -43,7 +45,7 @@ function averageTest(test1, test2) {
 function getAssignmentWeight(hw1, hw2, hw3) {
 
     var weight = 0.2; // Homework makes up 20% of the total grade
-    var average = averageHomework(hw1, hw2, hw3);
+    var average = averageHomework(hw1, hw2, hw3);  // returns -1 if values are invalid
 
     var weightedPercent = average * weight;
     return weightedPercent;
@@ -57,7 +59,7 @@ function getAssignmentWeight(hw1, hw2, hw3) {
 function getTestWeight(test1, test2) {
 
     var weight = 0.8; // Each test accounts for 40 percent of the overall grade
-    var average = averageTest(test1, test2);
+    var average = averageTest(test1, test2);  // returns -1 if values are invalid
 
     var weightedPercent = weight * average;
     return weightedPercent;
@@ -77,7 +79,14 @@ function getFinalGrade(hw1, hw2, hw3, test1, test2) {
     var testPercent = getTestWeight(test1, test2);
     var assignmentPercent = getAssignmentWeight(hw1, hw2, hw3);
 
-    return Math.round(testPercent + assignmentPercent);
+    // If the values are less than 0 that means that they were out of range
+    if((testPercent >= 0) && (assignmentPercent >= 0)) {
+        return Math.round(testPercent + assignmentPercent);
+    }
+
+    // Values were incorrect, display message and exit
+    console.log("[!] ERROR: All values must be between 0 and 100.");
+    process.exit(1);
 }
 
 /**
@@ -156,7 +165,7 @@ function testAverageHomework() {
     averageBoundary4 = averageHomework(normalVal, normalVal3, boundaryValLow);              // === 43.33
 
     // Check all of the values for accuracy
-    console.log('\nTESTING FUNCTION: averageHomework()');
+    console.log('\nTESTING FUNCTION: averageHomework(hw1, hw2, hw3):');
 
     // Check with normal values
     if(Math.round(averageNormal) === 68) {
@@ -259,6 +268,80 @@ function testAverageHomework() {
  */
 function testAverageTest() {
 
+    // Declare values to use here
+    var normalVal = 75;
+    var normalVal2 = 90;
+
+    var highVal = 200;
+    var lowVal = -100;
+
+    var boundaryHigh = 100;
+    var boundaryLow = 0;
+
+    var count = 1;
+    var hasFailed = false;
+
+    // Test the function here
+    var normalTest1 = averageTest(normalVal, normalVal);        // 75
+    var normalTest2 = averageTest(normalVal2, normalVal2);      // 90
+
+    var highValTest1 = averageTest(highVal, highVal);           // -1
+    var lowValTest1 = averageTest(lowVal, lowVal);              // -1
+
+    var boundaryTest1 = averageTest(boundaryLow, normalVal);    // 37.5
+    var boundaryTest2 = averageTest(boundaryHigh, normalVal2);  // 95
+
+    console.log("\nTESTING FUNCTION: averageTest(test1, test2):");
+
+    // Check for expected output
+    if (normalTest1 === 75) {
+        console.log("  " + (count++) + ' PASS');
+    } else {
+        console.log("  " + (count++) + ' FAIL: params = { 75, 75 } -> Result = ' + normalTest1);
+        hasFailed = true;
+    }
+
+    if (normalTest2 === 90) {
+        console.log("  " + (count++) + ' PASS');
+    } else {
+        console.log("  " + (count++) + ' FAIL: params = { 90, 90 } -> Result = ' + normalTest2);
+        hasFailed = true;
+    }
+
+    if (highValTest1 === -1) {
+        console.log("  " + (count++) + ' PASS');
+    } else {
+        console.log("  " + (count++) + ' FAIL: params = { 200, 200 } -> Result = ' + highValTest1);
+        hasFailed = true;
+    }
+
+    if (lowValTest1 === -1) {
+        console.log("  " + (count++) + ' PASS');
+    } else {
+        console.log("  " + (count++) + ' FAIL: params = { -100, -100 } -> Result = ' + lowValTest1);
+        hasFailed = true;
+    }
+
+    if (Math.round(boundaryTest1) === 38) {
+        console.log("  " + (count++) + ' PASS');
+    } else {
+        console.log("  " + (count++) + ' FAIL: params = { 0, 75 } -> Result = ' + boundaryTest1);
+        hasFailed = true;
+    }
+
+    if (boundaryTest2 === 95) {
+        console.log("  " + (count++) + ' PASS');
+    } else {
+        console.log("  " + (count++) + ' FAIL: params = { 100, 90 } -> Result = ' + boundaryTest2);
+        hasFailed = true;
+    }
+
+    if (hasFailed) {
+        console.log('RESULT: FAILED');
+    } else {
+        console.log("RESULT : PASSED");
+    }
+
 }
 
 /**
@@ -266,12 +349,209 @@ function testAverageTest() {
  */
 function testGetAssignmentWeight() {
 
+        // Set all values here
+        var largeVal = 200;
+        var lowVal = -100;
+    
+        var normalVal = 80;
+        var normalVal2 = 75;
+        var normalVal3 = 50;
+    
+        var boundaryValHigh = 100;
+        var boundaryValLow = 0;
+        var count = 1;
+        var hasFailed = false;
+
+        // test function
+        normalValTest = getAssignmentWeight(normalVal, normalVal, normalVal);              // 16
+        normalTest2 = getAssignmentWeight(normalVal, normalVal2, normalVal3);              // 13.6
+
+        largeValTest = getAssignmentWeight(largeVal, normalVal, normalVal);                // < 0
+        largeValTest2 = getAssignmentWeight(normalVal, largeVal, normalVal);               // < 0
+
+        lowValTest = getAssignmentWeight(normalVal, lowVal, normalVal);                    // < 0
+        lowValTest2 = getAssignmentWeight(normalVal, normalVal, lowVal);                   // < 0
+
+        boundaryTest1 = getAssignmentWeight(normalVal2, boundaryValHigh, normalVal2);      // 16.67
+        boundaryTest2 = getAssignmentWeight(normalVal, normalVal, boundaryValHigh);        // 17.33
+        boundaryTest3 = getAssignmentWeight(boundaryValLow, normalVal, normalVal);         // 10.66
+        boundaryTest4 = getAssignmentWeight(normalVal, boundaryValLow, boundaryValLow);    // 5.33
+
+        // Check all of the outputs here
+        console.log("\nTESTING FUNCTION: getAssignmentWeight(hw1, hw2, hw3):");
+
+        if(normalValTest === 16) {
+            console.log("  " + (count++) + ' PASS');
+        } else {
+            console.log("  " + (count++) + ' FAIL: params = { 80, 80, 80 } -> Result = ' + normalValTest);
+            hasFailed = true;
+        }
+
+        if(Math.round(normalTest2) === 14) {
+            console.log("  " + (count++) + ' PASS');
+        } else {
+            console.log("  " + (count++) + ' FAIL: params = { 80, 75, 50 } -> Result = ' + normalTest2);
+            hasFailed = true;
+        }
+
+        if(largeValTest < 0) {
+            console.log("  " + (count++) + ' PASS');
+        } else {
+            console.log("  " + (count++) + ' FAIL: params = { 200, 80, 80 } -> Result = ' + largeValTest);
+            hasFailed = true;
+        }
+
+        if(largeValTest2 < 0) {
+            console.log("  " + (count++) + ' PASS');
+        } else {
+            console.log("  " + (count++) + ' FAIL: params = { 80, 200, 80 } -> Result = ' + largeValTest2);
+            hasFailed = true;
+        }
+
+        if(lowValTest < 0) {
+            console.log("  " + (count++) + ' PASS');
+        } else {
+            console.log("  " + (count++) + ' FAIL: params = { 80, 0, 80 } -> Result = ' + lowValTest);
+            hasFailed = true;
+        }
+
+        if(lowValTest2 < 0) {
+            console.log("  " + (count++) + ' PASS');
+        } else {
+            console.log("  " + (count++) + ' FAIL: params = { 80, 80, 0 } -> Result = ' + lowValTest2);
+            hasFailed = true;
+        }
+
+        if(Math.round(boundaryTest1) === 17) {
+            console.log("  " + (count++) + ' PASS');
+        } else {
+            console.log("  " + (count++) + ' FAIL: params = { 75, 100, 75 } -> Result = ' + boundaryTest1);
+            hasFailed = true;
+        }
+
+        if(Math.round(boundaryTest2) === 17) {
+            console.log("  " + (count++) + ' PASS');
+        } else {
+            console.log("  " + (count++) + ' FAIL: params = { 80, 80, 100 } -> Result = ' + boundaryTest2);
+            hasFailed = true;
+        }
+
+        if(Math.round(boundaryTest3) === 11) {
+            console.log("  " + (count++) + ' PASS');
+        } else {
+            console.log("  " + (count++) + ' FAIL: params = { 0, 80, 80 } -> Result = ' + boundaryTest3);
+            hasFailed = true;
+        }
+
+        if(Math.round(boundaryTest4) === 5) {
+            console.log("  " + (count++) + ' PASS');
+        } else {
+            console.log("  " + (count++) + ' FAIL: params = { 80, 0, 0 } -> Result = ' + boundaryTest4);
+            hasFailed = true;
+        }
+
+        if (hasFailed) {
+            console.log('RESULT: FAILED');
+        } else {
+            console.log("RESULT : PASSED");
+        }
+
 }
 
 /**
  * Tests the getTestWeight function
  */
 function testGetTestWeight() {
+
+    // declare variables to test with here
+    var normalVal1 = 80;
+    var normalVal2 = 70;
+
+    var highVal = 200;
+    var lowVal = -100;
+
+    var boundaryHigh = 100;
+    var boundaryLow = 0;
+
+    var count = 1;
+    var hasFailed = false;
+
+    // Test the function here
+    var normalTest1 = getTestWeight(normalVal1, normalVal2);      // 60
+    var normalTest2 = getTestWeight(normalVal1, normalVal1);      // 64
+
+    var highTest = getTestWeight(highVal, normalVal1);            // < 0
+    var lowTest = getTestWeight(lowVal, normalVal1);              // < 0
+
+    var boundaryTest1 = getTestWeight(boundaryHigh, normalVal1);  // 72
+    var boundaryTest2 = getTestWeight(normalVal2, boundaryHigh);  // 68
+    var boundaryTest3 = getTestWeight(boundaryLow, normalVal2);   // 28
+    var boundaryTest4 = getTestWeight(normalVal1, boundaryLow);   // 32
+
+    console.log("\nTESTING FUNCTION: getTestWeight(test1, test2):");
+
+    // Check that functions returned the expected output
+    if (normalTest1 === 60) {
+        console.log("  " + (count++) + ' PASS');
+    } else {
+        console.log("  " + (count++) + ' FAIL: params = { 80, 70 } -> Result = ' + normalTest1);
+    }
+
+    if (normalTest2 === 64) {
+        console.log("  " + (count++) + ' PASS');
+    } else {
+        console.log("  " + (count++) + ' FAIL: params = { 80, 80 } -> Result = ' + normalTest2);
+        hasFailed = true;
+    }
+
+    if (highTest < 0) {
+        console.log("  " + (count++) + ' PASS');
+    } else {
+        console.log("  " + (count++) + ' FAIL: params = { 200, 80 } -> Result = ' + highTest);
+        hasFailed = true;
+    }
+
+    if (lowTest < 0) {
+        console.log("  " + (count++) + ' PASS');
+    } else {
+        console.log("  " + (count++) + ' FAIL: params = { 80, -100 } -> Result = ' + lowTest);
+        hasFailed = true;
+    }
+
+    if (boundaryTest1 === 72) {
+        console.log("  " + (count++) + ' PASS');
+    } else {
+        console.log("  " + (count++) + ' FAIL: params = { 100, 80 } -> Result = ' + boundaryTest1);
+        hasFailed = true;
+    }
+
+    if (boundaryTest2 === 68) {
+        console.log("  " + (count++) + ' PASS');
+    } else {
+        console.log("  " + (count++) + ' FAIL: params = { 70, 100 } -> Result = ' + boundaryTest2);
+        hasFailed = true;
+    }
+
+    if (boundaryTest3 === 28) {
+        console.log("  " + (count++) + ' PASS');
+    } else {
+        console.log("  " + (count++) + ' FAIL: params = { 0, 70 } -> Result = ' + boundaryTest3);
+        hasFailed = true;
+    }
+
+    if (boundaryTest4 === 32) {
+        console.log("  " + (count++) + ' PASS');
+    } else {
+        console.log("  " + (count++) + ' FAIL: params = { 80, 0 } -> Result = ' + boundaryTest4);
+        hasFailed = true;
+    }
+
+    // Display whether or not the function failed or passed. 
+    if(hasFailed) {
+        console.log("RESULT: FAILED");
+    } else {
+        console.log("RESULT: PASSED");
+    }
 
 }
 
@@ -315,7 +595,7 @@ var schema = {
    }
  };
 
-prompt.get(schema, function (err, result) {
+//prompt.get(schema, function (err, result) {
 
 //    console.log(' Assignment1: ' + result.assignment1);
 //    console.log(' Assignment2: ' + result.assignment2);
@@ -323,10 +603,10 @@ prompt.get(schema, function (err, result) {
 //    console.log(' exam1: ' + result.test1);
 //    console.log(' exam2: ' + result.test2);
 
-    var finalGrade = getFinalGrade(result.hw1, result.hw2, result.hw3, result.test1, result.test2);
-    printFinalGrade(finalGrade);
+ //   var finalGrade = getFinalGrade(result.hw1, result.hw2, result.hw3, result.test1, result.test2);
+ //   printFinalGrade(finalGrade);
 
-});
+//});
 
 //prompt.start();
 
@@ -336,4 +616,4 @@ testAverageHomework();
 testAverageTest();
 testGetAssignmentWeight();
 testGetTestWeight();
-testGetFinalGrade();
+//testGetFinalGrade();
